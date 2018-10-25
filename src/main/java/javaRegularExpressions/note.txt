@@ -1,0 +1,117 @@
+https://viblo.asia/p/mot-so-vi-du-ve-su-dung-regex-trong-java-gkyREowZznv
+https://www.oracle.com/technetwork/articles/java/regex-1564923.html
+http://www.vogella.com/tutorials/JavaRegularExpressions/article.html
+https://www.tutorialspoint.com/java/java_regular_expressions.htm
+
+Regular Expression hay còn gọi là biểu thức chính quy được dùng để xử lý chuỗi nâng cao thông qua biểu thức riêng của nó, những biểu thức này sẽ có những nguyên tắc riêng và bạn phải tuân theo nguyên tắc đó thì biểu thức của bạn mới hoạt động được. Ngoài cái tên gọi Regular Expression ra thì nó còn có thể viết tắt thành Regex.
+
+Nguyên tắc hoạt động của biểu thức Regex là so khớp dựa vào khuôn mẫu, khuôn mẫu được xây dựng từ các quy tắc căn bản của biểu thức Regex. Các ký tự thường dùng trong Regex:
+
+. : đại diện cho 1 ký tự bất kỳ trừ ký tự xuống dòng \n.
+\d : ký tự chữ số tương đương [0-9]
+\D : ký tự ko phải chữ số
+\s : ký tự khoảng trắng tương đương [ \f\n\r\t\v]
+\S : ký tự không phải khoảng trắng tương đương [ ^\f\n\r\t\v]
+\w : ký tự word (gồm chữ cái và chữ số, dấu gạch dưới _ ) tương đương [a-zA-Z_0-9]
+\W : ký tự không phải ký tự word tương đương [^a-zA-Z_0-9]
+^ : bắt đầu 1 chuỗi hay 1 dòng
+$$: kết thúc 1 chuỗi hay 1 dòng
+\A : bắt đầu 1 chuỗi
+\z : kết thúc 1 chuỗi
+| : ký tự ngăn cách so trùng tương đương với phép or (lưu ý cái này nếu muốn kết hợp nhiều điều kiện)
+[abc] : khớp với 1 ký tự nằm trong nhóm là a hay b hay c.
+[a-z] so trùng với 1 ký tự nằm trong phạm vi a-z, dùng dấu - làm dấu ngăn cách.
+[^abc] sẽ không so trùng với 1 ký tự nằm trong nhóm, ví dụ không so trùng với a hay b hay c.
+() : Xác định 1 group (biểu thức con) xem như nó là một yếu tố đơn lẻ trong pattern .ví dụ ((a(b))c) sẽ khớp với b, ab, abc.
+? : khớp với đứng trước từ 0 hay 1 lần. Ví dụ A?B sẽ khớp với B hay AB.
+: khớp với đứng trước từ 0 lần trở lên . A*B khớp với B, AB, AAB
+: khớp với đứng trước từ 1 lần trở lên. A+B khớp với AB, AAB.
+{n} : n là con số, Khớp đúng với n ký tự đúng trước nó . Ví dụ A{2}) khớp đúng với 2 chữ A.
+{n, } : khớp đúng với n ký tự trở lên đứng trước nó , A{2,} khớp vói AA, AAA ...
+{m,n} : khớp đùng với từ m->n ký tự đứng trước nó, A{2,4} khớp vói AA,AAA,AAAA
+Username Validation Chúng ta cần kiểm tra chuối string input nhập vào, là uername hay không, nếu là uername nó cần thỏa mãn các điều kiện sau:
+Có từ 3 - 5 kí tự
+Bao gồm các kí tự thường a -> z
+các chữ số 0 - 9 và một số kí tự đặc biệt: "_", "-", "."
+Pattern được sử dụng là: ^[a-z0-9._-]{3,15}$$
+
+^ : bắt đầu chuỗi
+[a-z0-9._-] Check kí tự xuất hiện trong chuỗi là a-z, 0-9, _, - hoặc .
+{3,15} : có từ 3 - 15 kí tự
+$$: kết thúc chuỗi
+import java.util.regex.Pattern;
+public class UsernameValidator {
+    private Pattern pattern;
+    private static final String USERNAME_PATTERN = "^[a-z0-9._-]{3,15}$";
+
+    public UsernameValidator() {
+        pattern = Pattern.compile(USERNAME_PATTERN);
+    }
+
+    public boolean validate(final String username) {
+        return pattern.matcher(username).matches();
+    }
+}
+
+public class UsernameValidatorDemo {
+    public static void main(String[] args) {
+        UsernameValidator validator = new UsernameValidator();
+        //true
+        System.out.println(validator.validate("absherzad"));
+        System.out.println(validator.validate("ab.sherzad"));
+        System.out.println(validator.validate("ab-sherzad"));
+        System.out.println(validator.validate("ab_sherzad"));
+        System.out.println(validator.validate("oxus20"));
+        System.out.println(validator.validate("ars"));
+        //false
+        System.out.println(validator.validate("Absherzad"));
+        System.out.println(validator.validate("ab sherzad"));
+        System.out.println(validator.validate("ab"));
+        System.out.println(validator.validate("abdulrahmansherzad"));
+    }
+}
+Password Complexity Validation Điều kiện để chuỗi đầu vào là password cần thỏa mãn các điều kiện sau:
+Có độ dài từ 6 - 15 kí tự
+Có ít nhất 1 kí tự thường, 1 kí tự viết hoa và 1 chữ số
+Có 1 trong các kí tự đặc biệt sau (! # $$@ _ + , ? . - )
+Pattern được sử dụng là: ((?=.d)(?=.[a-z])(?=.[A-Z])(?=.[!.#$$_+,?-]).{8,50})
+
+( Start of group
+(?=.*d) must contains one digit from 0-9
+(?=.*[a-z]) must contains one lowercase characters
+(?=.*[A-Z]) must contains one uppercase characters
+(?=.*[!.#@_+,?-]) must contains one special symbols in the list "!.#@_+,?-" . match anything with previous condition checking
+{8,50} length at least 8 characters and maximum of 50
+) End of group
+import java.util.regex.Pattern;
+public class PasswordValidator {
+    private Pattern pattern;
+    private static final String PASSWORD_PATTERN = "((?=.*d)(?=.*[a-z])(?=.*[A-Z])(?=.*[!.#$@_+,?-]).{8,50})";
+    public PasswordValidator() {
+        pattern = Pattern.compile(PASSWORD_PATTERN);
+    }
+
+    public boolean validate(final String password) {
+        return pattern.matcher(password).matches();
+    }
+}
+
+public class PasswordValidatorDemo {
+    public static void main(String[] args) {
+        PasswordValidator validator = new PasswordValidator();
+        // true
+        System.out.println(validator.validate("Oxus20.2014"));
+        System.out.println(validator.validate("Oxus.20_14"));
+        System.out.println(validator.validate("OXUS20@Herat"));
+        System.out.println(validator.validate("Oxus20@2014"));
+        // false
+        System.out.println(validator.validate("Oxus202014"));
+        System.out.println(validator.validate("Oxus20"));
+        System.out.println(validator.validate("Oxus@20"));
+        System.out.println(validator.validate("Oxus20@"));
+    }
+}
+
+Qua 2 ví dụ trên, ta thấy Regex là một công cụ rất mạnh trong làm việc với chuỗi. Việc ứng dụng regex vào code giúp chúng ta tiết kiệm được rất nhiều dòng code được viết ra, giúp code trở lên gắn gọn, dễ đọc hơn rất nhiều.
+TABLE OF CONTENTS
+Have no Tabl

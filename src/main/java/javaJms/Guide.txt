@@ -1,0 +1,15 @@
+1. Install activemq
+
+2. Setting with admin command
+
+3. cd F:\SoftWare\Java\apache-activemq-5.15.4\bin\win64
+
+4. Run InstallService.bat
+
+5. Login url: http://localhost:8161
+
+account: 
+admin
+admin
+
+6. Create Queue
