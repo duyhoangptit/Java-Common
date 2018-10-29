@@ -1,0 +1,6 @@
+https://stackjava.com/java8/functional-interface-la-gi-functional-interface-trong-java-8.html
+
+1. Functional Interface là interface có duy nhất 1 method trừu tượng (có thể có thêm các method không trừu tượng bằng từ khóa default trong Java 8)
+
+2. Method reference
+Đó là một tính năng có liên quan đến biểu thức Lambda. Nó cho phép bạn tham chiếu tới một method hoặc một constructor mà không cần thực thi chúng. Method references và Lambda là tương tự nhau, vì cả hai yêu cầu một loại mục tiêu là một Functional Interface tương thích.
